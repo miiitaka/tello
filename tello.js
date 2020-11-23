@@ -13,17 +13,25 @@ const sendCommand = (command) => {
   });
 }
 
-sendCommand("command");
+const time = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-// 離陸
-sendCommand("takeoff");
-
-// ５秒後に時計回りで180度
-setTimeout(() => {
+time(1000)
+.then(() => {
+  sendCommand("command");
+  sendCommand("takeoff");
+  return time(5000);
+}).then(() => {
   sendCommand("cw 180");
-}, 5000);
-
-// 10秒後に着陸
-setTimeout(() => {
+  return time(5000);
+}).then(() => {
+  sendCommand("up 50");
+  return time(5000);
+}).then(() => {
+  sendCommand("forward 50");
+  return time(5000);
+}).then(() => {
+  sendCommand("flip r");
+  return time(5000);
+}).then(() => {
   sendCommand("land");
-}, 10000);
+});
